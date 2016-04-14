@@ -39,9 +39,8 @@ constexpr auto prefix_length_hint =
   sizeof("char const *wnaabi::anonymous::pretty_function::c_str") - 1;
 
 constexpr auto strlen_correction =
-  strlen_uncorrected<void>()
-  - (find_offset(c_str<void>() + prefix_length_hint, '\0')
-     + prefix_length_hint);
+  strlen_uncorrected<void>() - (find_offset(c_str<void>() + prefix_length_hint,
+                                            '\0') + prefix_length_hint);
 static_assert(strlen_correction
                 == strlen_uncorrected<int>()
                      - (find_offset(c_str<int>() + prefix_length_hint, '\0')
@@ -68,24 +67,26 @@ constexpr inline std::size_t class_offset()
   // MSVC refers to class types using "struct St" and "class Cl"
   // this is not incorrect, but is unnecessarily cluttered
   // and inconsistent with other compilers
-  return std::is_class<T>::value && strlen<T>() >= 7
-             //&& (c_str<T>() + prefix_length)[0] == 's'
-             //&& (c_str<T>() + prefix_length)[1] == 't'
-             //&& (c_str<T>() + prefix_length)[2] == 'r'
-             //&& (c_str<T>() + prefix_length)[3] == 'u'
-             //&& (c_str<T>() + prefix_length)[4] == 'c'
-             //&& (c_str<T>() + prefix_length)[5] == 't'
-             && (c_str<T>() + prefix_length)[6] == ' '
-           ? 7
-           : std::is_class<T>::value && strlen<T>() >= 6
-                 //&& (c_str<T>() + prefix_length)[0] == 'c'
-                 //&& (c_str<T>() + prefix_length)[1] == 'l'
-                 //&& (c_str<T>() + prefix_length)[2] == 'a'
-                 //&& (c_str<T>() + prefix_length)[3] == 's'
-                 //&& (c_str<T>() + prefix_length)[4] == 's'
-                 && (c_str<T>() + prefix_length)[5] == ' '
-               ? 6
-               : 0;
+  return !std::is_class<T>::value
+           ? 0
+           : strlen<T>() - prefix_length >= 7
+                 //&& (c_str<T>() + prefix_length)[0] == 's'
+                 //&& (c_str<T>() + prefix_length)[1] == 't'
+                 //&& (c_str<T>() + prefix_length)[2] == 'r'
+                 //&& (c_str<T>() + prefix_length)[3] == 'u'
+                 //&& (c_str<T>() + prefix_length)[4] == 'c'
+                 //&& (c_str<T>() + prefix_length)[5] == 't'
+                 && (c_str<T>() + prefix_length)[6] == ' '
+               ? 7
+               : strlen<T>() - prefix_length >= 6
+                     //&& (c_str<T>() + prefix_length)[0] == 'c'
+                     //&& (c_str<T>() + prefix_length)[1] == 'l'
+                     //&& (c_str<T>() + prefix_length)[2] == 'a'
+                     //&& (c_str<T>() + prefix_length)[3] == 's'
+                     //&& (c_str<T>() + prefix_length)[4] == 's'
+                     && (c_str<T>() + prefix_length)[5] == ' '
+                   ? 6
+                   : 0;
 }
 
 template <typename T>
@@ -166,9 +167,13 @@ struct get_typename
                                           anonymous_scope_sequence>,
                  pretty_function::typename_sequence<T>>
 {
-  static constexpr auto value =
+  using value_type = decltype(to_string_literal(sequence_cast<get_typename>{}));
+  static constexpr value_type value =
     to_string_literal(sequence_cast<get_typename>{});
 };
+
+template <typename T>
+constexpr typename get_typename<T>::value_type get_typename<T>::value;
 
 // TODO this should go in another header file
 template <template <typename...> class T, typename... A>
@@ -177,9 +182,14 @@ struct get_templatename
                                           anonymous_scope_sequence>,
                  pretty_function::templatename_sequence<T, A...>>
 {
-  static constexpr auto value =
+  using value_type = decltype(to_string_literal(sequence_cast<get_templatename>{}));
+  static constexpr value_type value =
     to_string_literal(sequence_cast<get_templatename>{});
 };
+
+template <template <typename...> class T, typename... A>
+constexpr typename get_templatename<T, A...>::value_type get_templatename<T, A...>::value;
+
 }
 // namespace
 }

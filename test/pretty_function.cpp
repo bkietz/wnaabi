@@ -180,14 +180,21 @@ TEST(PrettyFunction, UserDefinedTypenameSequences)
             "bar::a_tpl");
 }
 
-struct super_long_identifier_super_long_identifier_super_long_identifier_super_long_identifier;
+struct
+  super_long_identifier_super_long_identifier_super_long_identifier_super_long_identifier;
 
 TEST(PrettyFunction, StressTesting)
 {
-	// this is mostly here to make sure the compiler doesn't break
-	// FEAR THE C1001 ERROR
-	auto sl = wnaabi::get_typename<super_long_identifier_super_long_identifier_super_long_identifier_super_long_identifier>::value.str();
-	EXPECT_EQ(sl, "super_long_identifier_super_long_identifier_super_long_identifier_super_long_identifier");
+  // this is mostly here to make sure the compiler doesn't break
+  // FEAR THE C1001 ERROR
+  auto sl =
+    wnaabi::
+      get_typename<super_long_identifier_super_long_identifier_super_long_identifier_super_long_identifier>::
+        value.str();
+  EXPECT_EQ(sl,
+            "super_long_identifier_super_long_identifier_super_long_identifier_"
+            "super_long_identifier");
+  constexpr auto other = wnaabi::string_literal<4>({"abc"});
 }
 
 int main(int argc, char **argv)

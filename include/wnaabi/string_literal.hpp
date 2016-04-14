@@ -46,7 +46,7 @@ public:
   };
 
   ///
-  /// allow constructions like string_literal<3>({{ 'a', 'b', 'c' }})
+  /// allow constructions like string_literal<3>({ 'a', 'b', 'c' })
   /// and string_literal<4>({ "abc" })
   constexpr basic_string_literal(initializer_list const &raw)
     : basic_string_literal{raw.elements, index_range<0, N>()}
@@ -189,11 +189,14 @@ template <typename Char, Char... chars>
 constexpr inline basic_string_literal<Char, sizeof...(chars)>
 to_string_literal(char_sequence<Char, chars...> const &)
 {
-  return basic_string_literal<Char, sizeof...(chars)>({{chars...}});
+  return basic_string_literal<Char, sizeof...(chars)>({chars...});
 }
 
 template <typename Lit, typename Indices>
-struct to_char_sequence_impl : to_char_sequence_impl<Lit, sequence_cast<Indices>> {};
+struct to_char_sequence_impl
+  : to_char_sequence_impl<Lit, sequence_cast<Indices>>
+{
+};
 
 template <typename Lit, std::size_t... I>
 struct to_char_sequence_impl<Lit, index_sequence<I...>>
@@ -205,10 +208,10 @@ struct to_char_sequence_impl<Lit, index_sequence<I...>>
 };
 
 template <typename Lit, Lit const &lit>
-struct to_char_sequence : to_char_sequence_impl<Lit, index_range<0, lit.size()>>
-  ::template from<lit>
-{};
-
+struct to_char_sequence
+  : to_char_sequence_impl<Lit, index_range<0, lit.size()>>::template from<lit>
+{
+};
 }
 // namespace
 }
