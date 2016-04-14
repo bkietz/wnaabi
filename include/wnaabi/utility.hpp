@@ -141,7 +141,7 @@ static_assert(std::is_base_of<index_sequence<0, 3, 2, 1, 4>,
               "concat_sequence failure");
 
 template <typename It>
-inline constexpr It midpoint(It b, It e)
+constexpr It midpoint(It b, It e)
 {
   return b + (e - b) / 2;
 }
@@ -209,7 +209,7 @@ using is_integral =
 ///
 /// braindead find impl
 template <typename It, typename N>
-inline constexpr std::size_t find_offset(It b_hay, N const &needle)
+constexpr std::size_t find_offset(It b_hay, N const &needle)
 {
   return *b_hay == needle ? 0 : 1 + find_offset(b_hay + 1, needle);
 }

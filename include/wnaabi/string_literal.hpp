@@ -125,19 +125,19 @@ template <std::size_t N>
 using string_literal = basic_string_literal<char, N>;
 
 template <typename Char, std::size_t N>
-std::basic_ostream<Char> &operator<<(std::basic_ostream<Char> &os,
+inline std::basic_ostream<Char> &operator<<(std::basic_ostream<Char> &os,
                                      basic_string_literal<Char, N> const &s)
 {
   os.write(s.data(), s.size());
   return os;
 }
 
-constexpr inline std::size_t num_digits(std::size_t n, std::size_t base)
+constexpr std::size_t num_digits(std::size_t n, std::size_t base)
 {
   return n == 0 ? 0 : num_digits(n / base, base) + 1;
 }
 
-constexpr inline std::size_t get_digit(std::size_t n, std::size_t i,
+constexpr std::size_t get_digit(std::size_t n, std::size_t i,
                                        std::size_t base)
 {
   return i == 0 ? n % base : get_digit(n / base, i - 1, base);
@@ -145,7 +145,7 @@ constexpr inline std::size_t get_digit(std::size_t n, std::size_t i,
 
 // TODO is this the correct way to derive Char'0'?
 template <typename Char>
-constexpr inline Char get_digit_char(std::size_t n, std::size_t i,
+constexpr Char get_digit_char(std::size_t n, std::size_t i,
                                      std::size_t base)
 {
   return static_cast<Char>(get_digit(n, i, base)) + static_cast<Char>('0');
@@ -170,7 +170,7 @@ static_assert(get_digit(0b1101, 2, 2), "get_digit failure");
 static_assert(get_digit(0b1101, 3, 2), "get_digit failure");
 
 template <typename Char, std::size_t N, std::size_t Base, std::size_t... I>
-constexpr inline basic_string_literal<Char, num_digits(N, Base)>
+constexpr basic_string_literal<Char, num_digits(N, Base)>
 to_string_literal(index_sequence<I...> const &)
 {
   return basic_string_literal<Char, num_digits(N, Base)>(
@@ -178,7 +178,7 @@ to_string_literal(index_sequence<I...> const &)
 }
 
 template <typename Char, std::size_t N, std::size_t Base>
-constexpr inline basic_string_literal<Char, num_digits(N, Base)>
+constexpr basic_string_literal<Char, num_digits(N, Base)>
 to_string_literal()
 {
   return to_string_literal<Char, N, Base>(
@@ -186,7 +186,7 @@ to_string_literal()
 }
 
 template <typename Char, Char... chars>
-constexpr inline basic_string_literal<Char, sizeof...(chars)>
+constexpr basic_string_literal<Char, sizeof...(chars)>
 to_string_literal(char_sequence<Char, chars...> const &)
 {
   return basic_string_literal<Char, sizeof...(chars)>({chars...});

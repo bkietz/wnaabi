@@ -14,7 +14,7 @@ namespace pretty_function
 {
 
 template <typename T>
-inline constexpr char const *c_str()
+constexpr char const *c_str()
 {
 #ifdef _WIN32
   return __FUNCSIG__;
@@ -24,7 +24,7 @@ inline constexpr char const *c_str()
 }
 
 template <typename T>
-inline constexpr std::size_t strlen_uncorrected()
+constexpr std::size_t strlen_uncorrected()
 {
 #ifdef _WIN32
   return sizeof(__FUNCSIG__);
@@ -48,7 +48,7 @@ static_assert(strlen_correction
               "strlen_correction is inconsistent!");
 
 template <typename T>
-inline constexpr std::size_t strlen()
+constexpr std::size_t strlen()
 {
   return strlen_uncorrected<T>() - strlen_correction;
 }
@@ -62,7 +62,7 @@ constexpr auto suffix_length =
   strlen<void>() - (prefix_length + sizeof("void") - 1);
 
 template <typename T>
-constexpr inline std::size_t class_offset()
+constexpr std::size_t class_offset()
 {
   // MSVC refers to class types using "struct St" and "class Cl"
   // this is not incorrect, but is unnecessarily cluttered
@@ -90,13 +90,13 @@ constexpr inline std::size_t class_offset()
 }
 
 template <typename T>
-inline constexpr std::size_t typename_length()
+constexpr std::size_t typename_length()
 {
   return strlen<T>() - prefix_length - suffix_length - class_offset<T>();
 }
 
 template <typename T>
-inline constexpr string_literal<typename_length<T>()> typename_literal()
+constexpr string_literal<typename_length<T>()> typename_literal()
 {
   return c_str<T>() + prefix_length + class_offset<T>();
 }
@@ -114,14 +114,14 @@ struct typename_sequence
 /// end of a template name
 /// NB: this means that types nested inside template types are right out
 template <template <typename...> class T, typename... A>
-inline constexpr std::size_t templatename_length()
+constexpr std::size_t templatename_length()
 {
   using type = T<A...>;
   return find_offset(c_str<type>() + prefix_length + class_offset<type>(), '<');
 }
 
 template <template <typename...> class T, typename... A>
-inline constexpr string_literal<templatename_length<T, A...>()>
+constexpr string_literal<templatename_length<T, A...>()>
 templatename_literal()
 {
   using type = T<A...>;
