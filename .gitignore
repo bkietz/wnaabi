@@ -1,6 +1,9 @@
 # I tend to name my build directories 'build-<compiler, arch, ...>'
 build-*
 
+# Sphinx build directory
+_build
+
 # https://github.com/github/gitignore/blob/master/C++.gitignore
 
 # Compiled Object files
