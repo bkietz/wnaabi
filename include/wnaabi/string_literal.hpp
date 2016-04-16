@@ -25,6 +25,7 @@ class basic_string_literal
 {
 public:
   using char_type = Char const;
+  using decl_char_type = Char;
   using raw_type = char_type[N];
 
   ///
@@ -69,12 +70,23 @@ public:
   }
 
   ///
+  /// construct a string literal from two smaller string literals
+  template <std::size_t N1, std::size_t N2>
+  constexpr basic_string_literal(
+    basic_string_literal<decl_char_type, N1> const &n1,
+    basic_string_literal<decl_char_type, N2> const &n2)
+    : basic_string_literal{n1.begin(), index_range<0, N1>(), n2.begin(),
+                           index_range<0, N2>()}
+  {
+  }
+
+  ///
   /// operator+ is overloaded to provide concatenation, as with std::string
   template <std::size_t M>
-  constexpr basic_string_literal<char_type, N + M>
-  operator+(basic_string_literal<char_type, M> const &other) const
+  constexpr basic_string_literal<decl_char_type, N + M>
+  operator+(basic_string_literal<decl_char_type, M> const &other) const
   {
-    return basic_string_literal<char_type, N + M>(*this, other);
+    return basic_string_literal<decl_char_type, N + M>(*this, other);
   }
 
   ///
@@ -101,14 +113,6 @@ private:
   {
   }
 
-  template <std::size_t N1, std::size_t N2>
-  constexpr basic_string_literal(basic_string_literal<char_type, N1> const &n1,
-                                 basic_string_literal<char_type, N2> const &n2)
-    : basic_string_literal{n1.begin(), index_range<0, N1>(), n2.begin(),
-                           index_range<0, N2>()}
-  {
-  }
-
   constexpr char_type ignore_index(std::size_t, char_type t) const { return t; }
 
   template <std::size_t... I>
@@ -125,8 +129,8 @@ template <std::size_t N>
 using string_literal = basic_string_literal<char, N>;
 
 template <typename Char, std::size_t N>
-inline std::basic_ostream<Char> &operator<<(std::basic_ostream<Char> &os,
-                                     basic_string_literal<Char, N> const &s)
+inline std::basic_ostream<Char> &
+operator<<(std::basic_ostream<Char> &os, basic_string_literal<Char, N> const &s)
 {
   os.write(s.data(), s.size());
   return os;
@@ -137,16 +141,14 @@ constexpr std::size_t num_digits(std::size_t n, std::size_t base)
   return n == 0 ? 0 : num_digits(n / base, base) + 1;
 }
 
-constexpr std::size_t get_digit(std::size_t n, std::size_t i,
-                                       std::size_t base)
+constexpr std::size_t get_digit(std::size_t n, std::size_t i, std::size_t base)
 {
   return i == 0 ? n % base : get_digit(n / base, i - 1, base);
 }
 
 // TODO is this the correct way to derive Char'0'?
 template <typename Char>
-constexpr Char get_digit_char(std::size_t n, std::size_t i,
-                                     std::size_t base)
+constexpr Char get_digit_char(std::size_t n, std::size_t i, std::size_t base)
 {
   return static_cast<Char>(get_digit(n, i, base)) + static_cast<Char>('0');
 }
@@ -174,12 +176,11 @@ constexpr basic_string_literal<Char, num_digits(N, Base)>
 to_string_literal(index_sequence<I...> const &)
 {
   return basic_string_literal<Char, num_digits(N, Base)>(
-    {{get_digit_char<Char>(N, Base, I)...}});
+    {get_digit_char<Char>(N, sizeof...(I)-1 - I, Base)...});
 }
 
 template <typename Char, std::size_t N, std::size_t Base>
-constexpr basic_string_literal<Char, num_digits(N, Base)>
-to_string_literal()
+constexpr basic_string_literal<Char, num_digits(N, Base)> to_string_literal()
 {
   return to_string_literal<Char, N, Base>(
     index_range<0, num_digits(N, Base)>{});
