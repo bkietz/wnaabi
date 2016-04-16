@@ -35,6 +35,7 @@ function(cxx_test name)
 endfunction()
 
 cxx_test(pretty_function)
+cxx_test(type_info)
 
 
 # compile one executable with a few calls to wnaabi::get_typename

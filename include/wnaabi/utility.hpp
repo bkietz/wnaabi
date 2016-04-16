@@ -206,6 +206,44 @@ using is_integral =
                          std::is_integral<I>::value && !is_character<I>::value
                            && !is_bool<I>::value && !is_unqualified<I>::value>;
 
+template <typename I>
+using is_signed_integral =
+  std::integral_constant<bool,
+                         is_integral<I>::value && std::is_signed<I>::value>;
+
+template <typename I>
+using is_unsigned_integral =
+  std::integral_constant<bool,
+                         is_integral<I>::value && std::is_unsigned<I>::value>;
+
+template <typename Tag, typename Num>
+struct is_numeric : std::false_type
+{
+};
+
+template <typename Num>
+struct is_numeric<unsigned, Num> : is_unsigned_integral<Num>
+{
+};
+
+template <typename Num>
+struct is_numeric<signed, Num> : is_signed_integral<Num>
+{
+};
+
+template <typename Num>
+struct is_numeric<float, Num> : std::is_floating_point<Num>
+{
+};
+
+template <typename Num>
+struct is_numeric<char, Num> : is_character<Num>
+{
+};
+
+template <typename Tag, typename Num, typename R=void>
+using enable_if_numeric = typename std::enable_if<is_numeric<Tag, Num>::value, R>::type;
+
 ///
 /// braindead find impl
 template <typename It, typename N>
