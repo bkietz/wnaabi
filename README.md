@@ -15,3 +15,15 @@ The premise of this project is that the C++ type system, generalized
 `constexpr` functions, and the rock-solid and minimalist C ABI can
 bootstrap a pretty awesome subset of the things a C++ ABI would be used for.
 
+```c++
+#include <cassert>
+#include <wnaabi/type_info.hpp>
+
+using namespace wnaabi;
+namespace bar { struct baz; }
+
+int main()
+{
+  assert(type_info<bar::baz>::name_tokens(runtime_visitors::stringify_t{}).str == "bar::baz");
+}
+```
