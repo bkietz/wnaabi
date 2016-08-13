@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 #include <regex>
 #include <wnaabi/pretty_function.hpp>
+#include <cstring>
 
 // this is nifty but where does it go?
 template <typename T>
