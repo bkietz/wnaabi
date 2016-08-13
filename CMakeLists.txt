@@ -22,8 +22,10 @@ include_directories(
   "${CMAKE_CURRENT_SOURCE_DIR}/googletest/include"
   "${CMAKE_CURRENT_SOURCE_DIR}/googlemock/include")
 
-find_package(Sphinx REQUIRED)
-sphinx_doc(doc)
+if(NOT SKIP_DOC)
+  find_package(Sphinx REQUIRED)
+  sphinx_doc(doc)
+endif()
 
 find_package(PythonInterp REQUIRED)
 enable_testing()
