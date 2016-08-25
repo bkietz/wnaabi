@@ -97,15 +97,16 @@ TEST(PrettyFunction, CompileTimeStringAssumptions)
   auto angle_found = std::find(tpl_found, tpl_c_str_e, '<');
   EXPECT_EQ(angle_found - tpl_found, 8);
 
-  // typename_literal<bar::quux> is exactly "bar::(.*)::quux"
-  std::regex quux_exp{"^bar::(.*)::quux$"};
+  // typename_literal<bar::quux> is exactly "bar::(.*)quux"
+  std::regex quux_exp{"bar::(.*)quux"};
   constexpr auto quux_lit =
     wnaabi::pretty_function::typename_literal<bar::quux>();
   auto quux_str = quux_lit.str();
   std::smatch quux_results;
+
   auto quux_matched = std::regex_match(quux_str, quux_results, quux_exp);
   EXPECT_TRUE(quux_matched);
-
+  EXPECT_EQ(quux_results[0], quux_str);
   // anonymous_scope_literal is longer than "anonymous::"
   EXPECT_GE(static_cast<std::size_t>(quux_results[1].length()),
             std::strlen("anonymous::"));

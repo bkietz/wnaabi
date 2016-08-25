@@ -94,7 +94,7 @@ struct recurse_into_type_info_tokens
 
   template <typename T>
   constexpr auto operator()(type_info<T>) const
-    -> decltype(type_info<T>::name_tokens(cast()))
+    -> decltype(type_info<T>::name_tokens(std::declval<derived_type const&>()))
   {
     return type_info<T>::name_tokens(cast());
   }
