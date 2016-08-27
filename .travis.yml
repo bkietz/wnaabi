@@ -10,7 +10,9 @@ before_install:
 - echo $LANG
 - echo $LC_ALL
 install:
-- sudo apt-get install cmake
+- sudo apt-get install cmake clang-3.8
+- sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.8 100
+- sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.8 100
 script:
 - mkdir build && cd build
 - cmake -DSKIP_DOC=true ..
