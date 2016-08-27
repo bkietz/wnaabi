@@ -1,9 +1,8 @@
 # wnaabi
 Who Needs an ABI?
 
-[![Documentation Status](https://readthedocs.org/projects/wnaabi/badge/?version=latest&style=flat-square)](http://wnaabi.readthedocs.io/en/latest/?badge=latest)
-
-[![Build Status](https://drone.io/github.com/bkietz/wnaabi/status.png)](https://drone.io/github.com/bkietz/wnaabi/latest)
+[![Documentation Status](https://readthedocs.org/projects/wnaabi/badge/?version=latest)](http://wnaabi.readthedocs.io/en/latest/?badge=latest)
+[![Build Status](https://travis-ci.org/bkietz/wnaabi.svg)](https://travis-ci.org/bkietz/wnaabi)
 
 This project presents a nifty implementation of `type_index`
 with some features you will love:
