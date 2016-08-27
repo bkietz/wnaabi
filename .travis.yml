@@ -13,7 +13,7 @@ install:
 - sudo apt-get install cmake
 script:
 - mkdir build && cd build
-- cmake ..
+- cmake -DSKIP_DOC=true ..
 - cmake --build .
 - ctest
 after_success: echo "success!"
