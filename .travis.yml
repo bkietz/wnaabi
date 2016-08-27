@@ -9,7 +9,14 @@ os:
 before_install:
 - echo $LANG
 - echo $LC_ALL
-script: echo "do testing"
+install:
+- sudo apt-get install cmake
+build:
+- mkdir build
+- cd build && cmake ..
+- cmake --build build/
+script:
+- ctest
 after_success: echo "success!"
 branches:
   only:
