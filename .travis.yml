@@ -11,11 +11,10 @@ before_install:
 - echo $LC_ALL
 install:
 - sudo apt-get install cmake
-build:
+script:
 - mkdir build
 - cd build && cmake ..
 - cmake --build build/
-script:
 - ctest
 after_success: echo "success!"
 branches:
