@@ -12,9 +12,9 @@ before_install:
 install:
 - sudo apt-get install cmake
 script:
-- mkdir build
-- cd build && cmake ..
-- cmake --build build/
+- mkdir build && cd build
+- cmake ..
+- cmake --build .
 - ctest
 after_success: echo "success!"
 branches:
