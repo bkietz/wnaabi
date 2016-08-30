@@ -5,8 +5,8 @@ install:
 - git submodule update --init --recursive
 build_script:
 - set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
-- cmake -DWNAABI_BUILD_DOC=OFF -H. -Bbuild-av -G "Visual Studio 14 2015"
-- cmake --build build-av/ --config Release
+- cmake -DWNAABI_BUILD_DOC=OFF -H. -Bbuild-av\ -G "Visual Studio 14 2015"
+- cmake --build build-av\ --config Release
 test_script:
-- cd build-av
-- ctest
+- cd build-av\
+- ctest --build-config Release
