@@ -32,7 +32,7 @@ endfunction()
 function(static_runtime target)
   if(MSVC)
     target_compile_options(${target}
-      PRIVATE "/MD$<$<CONFIG:Debug>:d>")
+      PRIVATE "/MT$<$<CONFIG:Debug>:d>")
   endif()
 endfunction()
 
