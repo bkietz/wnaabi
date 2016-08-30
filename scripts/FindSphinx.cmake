@@ -37,26 +37,28 @@ set(SPHINX_BUILDERS "dirhtml;xml" CACHE STRING "\
       coverage   to run coverage check of the documentation (if enabled)\
   ")
 
-# create a target named ${docsourceroot}
+# create a target named ${target}
 # which invokes sphinx-build with given builders
-# assume that conf.py is in ${docsourceroot}
-# assume that docsourceroot contains build directory _build
-function(sphinx_doc docsourceroot)
-  set(root "${CMAKE_CURRENT_SOURCE_DIR}/${docsourceroot}")
-  add_custom_target(${docsourceroot}
+# build into directory ${target}
+# read documentation from ${CMAKE_CURRENT_SOURCE_DIR}/${srcroot}
+# assume that conf.py is at documentation root
+function(sphinx_doc target srcroot)
+  set(builddir "${CMAKE_CURRENT_BINARY_DIR}/${target}")
+  set(root "${CMAKE_CURRENT_SOURCE_DIR}/${srcroot}")
+  add_custom_target(${target}
     COMMAND "echo"
     COMMENT "Generate Sphinx documentation with ${SPHINX_BUILDERS}"
   )
   foreach(builder IN LISTS SPHINX_BUILDERS)
-    set(sub_target "${docsourceroot}_BUILDER_${builder}")
-    add_custom_target(${sub_target} ALL
+    set(subtarget "${target}_BUILDER_${builder}")
+    add_custom_target(${subtarget} ALL
       COMMAND ${SPHINX_EXECUTABLE} -b ${builder}
       -c ${root}
       ${root}
-      ${root}/_build
+      ${builddir}
       COMMENT "Sphinx documentation sub target, BUILDER=${builder}"
     )
-    add_dependencies(${docsourceroot} ${sub_target})
+    add_dependencies(${target} ${subtarget})
   endforeach()
 endfunction()
 

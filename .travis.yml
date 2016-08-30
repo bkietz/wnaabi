@@ -11,10 +11,9 @@ before_install:
 install:
 - sudo apt-get install cmake clang-3.8
 script:
-- mkdir build && cd build
-- cmake -DCMAKE_C_COMPILER=clang-3.8 -DCMAKE_CXX_COMPILER=clang++-3.8 -DSKIP_DOC=true ..
-- cmake --build .
-- ctest
+- cmake -DCMAKE_C_COMPILER=clang-3.8 -DCMAKE_CXX_COMPILER=clang++-3.8 -DBUILD_DOC=OFF -H. -Bbuild-travis/
+- cmake --build build-travis/
+- cd build-travis/ && ctest
 after_success: echo "success!"
 branches:
   only:

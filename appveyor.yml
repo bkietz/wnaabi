@@ -1,0 +1,11 @@
+version: '{build}'
+os: Visual Studio 2015
+init: []
+install: []
+build_script:
+- set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
+- cmake -H. -Bbuild-av -G "Visual Studio 14 2015"
+- cmake --build build-av --config Release
+test_script:
+- cd build-av
+- ctest

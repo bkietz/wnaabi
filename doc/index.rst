@@ -13,6 +13,8 @@ Implementation Notes
 
    PrettyFunction
 
+.. include:: ../README.rst
+
 Indices and tables
 ==================
 
